@@ -1,0 +1,272 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>For Shai 💌</title>
+  <link href="https://fonts.googleapis.com/css2?family=Dancing+Script:wght@700&family=Inter:wght@400;500&display=swap" rel="stylesheet"/>
+  <style>
+    *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+    body {
+      min-height: 100vh;
+      background: linear-gradient(135deg, #fff0f5 0%, #fce4ec 50%, #f8bbd0 100%);
+      display: flex;
+      align-items: center;
+      justify-content: center;
+      font-family: 'Inter', sans-serif;
+      overflow: hidden;
+      position: relative;
+    }
+
+    .hearts-bg {
+      position: fixed;
+      inset: 0;
+      pointer-events: none;
+      z-index: 0;
+    }
+
+    .floating-heart {
+      position: absolute;
+      bottom: -40px;
+      opacity: 0;
+      animation: floatUp linear infinite;
+      user-select: none;
+    }
+
+    @keyframes floatUp {
+      0%   { transform: translateY(0) rotate(0deg) scale(1);   opacity: 0; }
+      10%  { opacity: 0.5; }
+      80%  { opacity: 0.3; }
+      100% { transform: translateY(-110vh) rotate(25deg) scale(1.2); opacity: 0; }
+    }
+
+    .card {
+      position: relative;
+      z-index: 1;
+      background: rgba(255,255,255,0.82);
+      backdrop-filter: blur(12px);
+      border: 1px solid rgba(255,150,180,0.3);
+      border-radius: 28px;
+      padding: 3rem 2.5rem 2.5rem;
+      max-width: 440px;
+      width: 92%;
+      text-align: center;
+      box-shadow: 0 8px 40px rgba(233,30,140,0.12);
+    }
+
+    .name {
+      font-family: 'Dancing Script', cursive;
+      font-size: 3.2rem;
+      color: #c2185b;
+      line-height: 1.1;
+      margin-bottom: 0.3rem;
+    }
+
+    .intro {
+      font-size: 0.95rem;
+      color: #888;
+      margin-bottom: 2rem;
+      letter-spacing: 0.01em;
+    }
+
+    .question {
+      font-size: 1.5rem;
+      font-weight: 500;
+      color: #333;
+      line-height: 1.4;
+      margin-bottom: 0.6rem;
+    }
+
+    .emoji-row {
+      font-size: 2rem;
+      margin-bottom: 2rem;
+      letter-spacing: 0.1em;
+    }
+
+    .btn-row {
+      display: flex;
+      gap: 14px;
+      justify-content: center;
+      flex-wrap: wrap;
+      position: relative;
+      min-height: 60px;
+      align-items: center;
+    }
+
+    .btn-yes {
+      background: #e91e8c;
+      color: #fff;
+      border: none;
+      border-radius: 50px;
+      padding: 0.75rem 2.4rem;
+      font-size: 1.05rem;
+      font-weight: 500;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: transform 0.12s, box-shadow 0.12s;
+      letter-spacing: 0.01em;
+    }
+
+    .btn-yes:hover {
+      transform: scale(1.07);
+      box-shadow: 0 4px 22px rgba(233,30,140,0.35);
+    }
+
+    .btn-no {
+      background: transparent;
+      color: #aaa;
+      border: 1px solid #ddd;
+      border-radius: 50px;
+      padding: 0.75rem 2.4rem;
+      font-size: 1.05rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: transform 0.15s;
+      position: relative;
+    }
+
+    .hint {
+      font-size: 0.72rem;
+      color: #ccc;
+      margin-top: 1.2rem;
+    }
+
+    /* Result */
+    .result-box {
+      display: none;
+      flex-direction: column;
+      align-items: center;
+      gap: 1rem;
+      animation: popIn 0.45s cubic-bezier(.34,1.56,.64,1);
+    }
+
+    @keyframes popIn {
+      0%   { transform: scale(0.5); opacity: 0; }
+      100% { transform: scale(1);   opacity: 1; }
+    }
+
+    .result-emoji { font-size: 4.5rem; }
+
+    .result-text {
+      font-family: 'Dancing Script', cursive;
+      font-size: 2.4rem;
+      color: #c2185b;
+      line-height: 1.2;
+    }
+
+    .result-sub {
+      font-size: 0.95rem;
+      color: #888;
+    }
+
+    .try-again {
+      margin-top: 0.8rem;
+      background: transparent;
+      border: 1px solid #f48fb1;
+      color: #c2185b;
+      border-radius: 50px;
+      padding: 0.5rem 1.6rem;
+      font-size: 0.9rem;
+      font-family: 'Inter', sans-serif;
+      cursor: pointer;
+      transition: background 0.15s;
+    }
+
+    .try-again:hover { background: #fce4ec; }
+
+    @media (prefers-reduced-motion: reduce) {
+      .floating-heart, .result-box, .btn-yes, .btn-no { animation: none; transition: none; }
+    }
+  </style>
+</head>
+<body>
+
+  <div class="hearts-bg" id="heartsBg"></div>
+
+  <div class="card">
+    <div id="mainContent">
+      <div class="name">Shai Ayento 🌹</div>
+      <div class="intro">There's something I've been meaning to ask you...</div>
+      <div class="question">Will you be my girlfriend?</div>
+      <div class="emoji-row">💌 💕 🌸</div>
+      <div class="btn-row" id="btnRow">
+        <button class="btn-yes" onclick="answer(true)">Yes, of course! 💖</button>
+        <button class="btn-no" id="noBtn" onmouseover="runAway()" ontouchstart="runAway()" onclick="answer(false)">No...</button>
+      </div>
+      <div class="hint">(psst — the no button is a little shy)</div>
+    </div>
+
+    <div class="result-box" id="resultBox">
+      <div class="result-emoji" id="resultEmoji"></div>
+      <div class="result-text" id="resultText"></div>
+      <div class="result-sub" id="resultSub"></div>
+      <button class="try-again" onclick="reset()">↩ Start over</button>
+    </div>
+  </div>
+
+  <script>
+    /* Floating hearts */
+    const bg = document.getElementById('heartsBg');
+    const emojis = ['❤️','💕','🌹','💗','💝','🌸','✨','💞','🥰','🎀'];
+    for (let i = 0; i < 22; i++) {
+      const h = document.createElement('span');
+      h.className = 'floating-heart';
+      h.textContent = emojis[Math.floor(Math.random() * emojis.length)];
+      h.style.left = (Math.random() * 96) + '%';
+      h.style.animationDuration = (6 + Math.random() * 10) + 's';
+      h.style.animationDelay = (Math.random() * 10) + 's';
+      h.style.fontSize = (0.8 + Math.random() * 1.4) + 'rem';
+      bg.appendChild(h);
+    }
+
+    /* Runaway No button */
+    let noCount = 0;
+    function runAway() {
+      noCount++;
+      const btn = document.getElementById('noBtn');
+      const row = document.getElementById('btnRow');
+      const rw = row.offsetWidth;
+      const rh = row.offsetHeight;
+      const bw = btn.offsetWidth;
+      const bh = btn.offsetHeight;
+
+      const maxX = Math.max(0, rw - bw);
+      const maxY = Math.max(0, rh - bh);
+
+      btn.style.position = 'absolute';
+      btn.style.left = Math.floor(Math.random() * maxX) + 'px';
+      btn.style.top  = Math.floor(Math.random() * maxY) + 'px';
+    }
+
+    /* Answer */
+    function answer(yes) {
+      document.getElementById('mainContent').style.display = 'none';
+      const box = document.getElementById('resultBox');
+      box.style.display = 'flex';
+
+      if (yes) {
+        document.getElementById('resultEmoji').textContent = '🥰💖🎉';
+        document.getElementById('resultText').textContent  = 'She said YES!';
+        document.getElementById('resultSub').textContent   = 'This is the best day ever. 💌';
+      } else {
+        document.getElementById('resultEmoji').textContent = '😭💔';
+        document.getElementById('resultText').textContent  = 'Heartbroken...';
+        document.getElementById('resultSub').textContent   = 'But the feelings are real 🌹';
+      }
+    }
+
+    /* Reset */
+    function reset() {
+      const btn = document.getElementById('noBtn');
+      btn.style.position = '';
+      btn.style.left = '';
+      btn.style.top  = '';
+      noCount = 0;
+
+      document.getElementById('resultBox').style.display = 'none';
+      document.getElementById('mainContent').style.display = 'block';
+    }
+  </script>
+</body>
+</html>
